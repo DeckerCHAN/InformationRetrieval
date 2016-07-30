@@ -6,7 +6,7 @@
  * @author Scott Sanner, Paul Thomas
  */
 
-package com.decker;
+package com.deckerchan;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
