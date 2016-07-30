@@ -38,15 +38,16 @@ public class FileIndexBuilder {
 
     public static void main(String[] args) throws Exception {
 
-        String index_path = "src/search/lucene.index";
-        FileIndexBuilder b = new FileIndexBuilder(index_path);
-        b.addFiles(FileFinder.GetAllFiles("src/search", ".txt", true),
+        String index_path = Configuration.INDEX_PATH;
+        FileIndexBuilder builder = new FileIndexBuilder(index_path);
+        builder.addFiles(FileFinder.GetAllFiles(Configuration.SOURCE_PATH, ".txt", true),
                 true /*clear_old_index = false if adding*/);
 
         IndexDisplay.Display(index_path, System.out);
     }
 
-    /** Main procedure for adding files to the index
+    /**
+     * Main procedure for adding files to the index
      *
      * @param files
      * @param clear_old_index set to true to create a new index, or
@@ -68,14 +69,14 @@ public class FileIndexBuilder {
             //        IndexWriter.addIndexes(Directory[])
             //
             //        Index is optimized on optimize() or close()
-            IndexWriterConfig wc = new IndexWriterConfig(_analyzer);
+            IndexWriterConfig indexWriterConfig = new IndexWriterConfig(_analyzer);
             if (clear_old_index) {
-                wc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+                indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
             } else {
-                wc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+                indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             }
             Directory d = new SimpleFSDirectory(Paths.get(_indexPath));
-            IndexWriter w = new IndexWriter(d, wc);
+            IndexWriter w = new IndexWriter(d, indexWriterConfig);
 
             // Add all files
             for (File f : files) {
