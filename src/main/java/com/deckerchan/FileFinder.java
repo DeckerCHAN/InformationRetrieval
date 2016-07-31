@@ -17,11 +17,11 @@ public class FileFinder {
      * @param src source directory
      * @param ext null if any extension OK
      * @param recurse recurse on subdirectories
-     * @return
+     * @return files
      */
     public static ArrayList<File> GetAllFiles(String src, String ext, boolean recurse) {
 
-        ArrayList<File> ret_files = new ArrayList<File>();
+        ArrayList<File> ret_files = new ArrayList<>();
         File[] files = new File(src).listFiles();
 
         for (File f : files) {
@@ -38,7 +38,7 @@ public class FileFinder {
     }
 
     /**
-     * @param args
+     * @param args arguments
      */
     public static void main(String[] args) {
         System.out.println("\nTest 1: ");

@@ -18,11 +18,10 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SimpleSearchRanker {
 
@@ -30,7 +29,7 @@ public class SimpleSearchRanker {
     StandardQueryParser _parser;
     IndexReader _reader;
     IndexSearcher _searcher;
-    DecimalFormat _df = new DecimalFormat("#.####");
+
 
     public SimpleSearchRanker(String index_path, String default_field, Analyzer a)
             throws IOException {
@@ -56,53 +55,80 @@ public class SimpleSearchRanker {
         //           where one can individually boost the importance of query terms with
         //           a multipler using ^
 
-        PrintStream fileOut = new PrintStream(new FileOutputStream("out.txt", true));
-        // Standard single term
-        ranker.doSearch("Obama", 5, fileOut);
+        PrintStream fileOut = new PrintStream(new FileOutputStream("out.txt", false));
 
-        // Multiple term (implicit OR)
-        ranker.doSearch("Obama Hillary", 5, fileOut);
+        try (BufferedReader br = new BufferedReader(new FileReader(Configuration.TOPIC_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String content = null;
+                Matcher contentMatcher = Pattern.compile("(?<=\\d\\s).*").matcher(line);
+                if (contentMatcher.find()) {
+                    content = contentMatcher.group(0);
+                } else {
+                    System.exit(0);
+                }
 
-        // Wild card
-        ranker.doSearch("Ob*ma", 5, fileOut);
+                String index = null;
+                Matcher indexMatcher = Pattern.compile("\\d+(?=\\s)").matcher(line);
+                if (indexMatcher.find()) {
+                    index = indexMatcher.group(0);
+                } else {
+                    System.exit(0);
+                }
 
-        // Edit distance
-        ranker.doSearch("Obama~.4", 5, fileOut);
+                ranker.doSearch(index, content, fileOut);
 
-        // Fielded search (FIELD:...), boolean (AND OR NOT)
-        ranker.doSearch("FIRST_LINE:Obama AND Hillary", 5, System.out);
-        ranker.doSearch("FIRST_LINE:Obama AND NOT Hillary", 5, System.out);
+            }
+        }
 
-        // Phrase search (slop factor ~k allows words to be within k distance)
-        ranker.doSearch("\"Barack Obama\"", 5, System.out);
-        ranker.doSearch("\"Barack Obama\"~5", 5, System.out);
-
-        // Note: can boost terms or subqueries using ^ (e.g., ^10 or ^.1) -- default is 1
-        ranker.doSearch("Obama^10 Hillary^0.1", 5, System.out);
-        ranker.doSearch("(FIRST_LINE:\"Barack Obama\")^10 OR Hillary^0.1", 5, System.out);
-
-        // Reversing boost... see change in ranking
-        ranker.doSearch("Obama^0.1 Hillary^10", 5, System.out);
-        ranker.doSearch("(FIRST_LINE:\"Barack Obama\")^0.1 OR Hillary^10", 5, System.out);
-
-        // Complex query
-        ranker.doSearch("(FIRST_LINE:\"Barack Obama\"~5^10 AND Obama~.4) OR Hillary", 5, System.out);
+//        // Standard single term
+//        ranker.doSearch("Obama", 5, fileOut);
+//
+//        // Multiple term (implicit OR)
+//        ranker.doSearch("Obama Hillary", 5, fileOut);
+//
+//        // Wild card
+//        ranker.doSearch("Ob*ma", 5, fileOut);
+//
+//        // Edit distance
+//        ranker.doSearch("Obama~.4", 5, fileOut);
+//
+//        // Fielded search (FIELD:...), boolean (AND OR NOT)
+//        ranker.doSearch("FIRST_LINE:Obama AND Hillary", 5, System.out);
+//        ranker.doSearch("FIRST_LINE:Obama AND NOT Hillary", 5, System.out);
+//
+//        // Phrase search (slop factor ~k allows words to be within k distance)
+//        ranker.doSearch("\"Barack Obama\"", 5, System.out);
+//        ranker.doSearch("\"Barack Obama\"~5", 5, System.out);
+//
+//        // Note: can boost terms or subqueries using ^ (e.g., ^10 or ^.1) -- default is 1
+//        ranker.doSearch("Obama^10 Hillary^0.1", 5, System.out);
+//        ranker.doSearch("(FIRST_LINE:\"Barack Obama\")^10 OR Hillary^0.1", 5, System.out);
+//
+//        // Reversing boost... see change in ranking
+//        ranker.doSearch("Obama^0.1 Hillary^10", 5, System.out);
+//        ranker.doSearch("(FIRST_LINE:\"Barack Obama\")^0.1 OR Hillary^10", 5, System.out);
+//
+//        // Complex query
+//        ranker.doSearch("(FIRST_LINE:\"Barack Obama\"~5^10 AND Obama~.4) OR Hillary", 5, System.out);
     }
 
-    public void doSearch(String queryContent, int num_hits, PrintStream ps)
+    public void doSearch(String index, String queryContent, PrintStream ps)
             throws Exception {
 
         Query query = _parser.parse(queryContent, "CONTENT");
-        TopScoreDocCollector collector = TopScoreDocCollector.create(num_hits);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(Configuration.SEARCH_NUMBER_HIT);
         _searcher.search(query, collector);
         ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
-        ps.println("Found " + hits.length + " hits " + " for query " + queryContent + ":");
+//        ps.println("Found " + hits.length + " hits " + " for query " + queryContent + ":");
         for (int i = 0; i < hits.length; i++) {
             int docId = hits[i].doc;
             Document document = _searcher.doc(docId);
-            ps.println((i + 1) + ". (" + _df.format(hits[i].score)
-                    + ") " + document.get("PATH"));
+
+            ps.printf("%s Q0 %s %d %s myname %n", index, Paths.get(document.get("PATH")).getFileName().toString(), i, Configuration.DECIMAL_FORMAT.format(hits[i].score));
+//            ps.println((i + 1) + ". (" + _df.format(hits[i].score)
+//                    + ") " + document.get("PATH"));
         }
     }
 

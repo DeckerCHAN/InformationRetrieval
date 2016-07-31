@@ -40,7 +40,7 @@ public class FileIndexBuilder {
 
         String index_path = Configuration.INDEX_PATH;
         FileIndexBuilder builder = new FileIndexBuilder(index_path);
-        builder.addFiles(FileFinder.GetAllFiles(Configuration.SOURCE_PATH, ".txt", true),
+        builder.addFiles(FileFinder.GetAllFiles(Configuration.DOCUMENT_PATH, null, true),
                 true /*clear_old_index = false if adding*/);
 
         IndexDisplay.Display(index_path, System.out);
@@ -49,10 +49,10 @@ public class FileIndexBuilder {
     /**
      * Main procedure for adding files to the index
      *
-     * @param files
+     * @param files files need to add
      * @param clear_old_index set to true to create a new index, or
      *                        false to add to a currently existing index
-     * @return
+     * @return successful add
      */
     public boolean addFiles(List<File> files, boolean clear_old_index) {
 
@@ -88,7 +88,7 @@ public class FileIndexBuilder {
             w.close();
 
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
             return false;
         }
 
