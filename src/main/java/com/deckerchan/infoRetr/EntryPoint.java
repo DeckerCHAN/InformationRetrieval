@@ -18,7 +18,7 @@ public class EntryPoint {
         String[] newArgs = new String[]{};
 
         if (args.length > 1) {
-            newArgs = Arrays.copyOfRange(args, 1, args.length - 1);
+            newArgs = Arrays.copyOfRange(args, 1, args.length);
         }
 
         String launchClass = args[0];
