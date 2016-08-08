@@ -32,7 +32,7 @@ tasks.withType(Jar) {
     destinationDir = file("$rootDir/build/target")
 
     manifest {
-        attributes 'Main-Class': '$mainClassName'
+        attributes 'Main-Class': "$mainClassName"
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
