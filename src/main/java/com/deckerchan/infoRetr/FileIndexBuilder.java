@@ -43,7 +43,7 @@ public class FileIndexBuilder {
         builder.addFiles(FileFinder.GetAllFiles(Configuration.DOCUMENT_PATH, null, true),
                 true /*clear_old_index = false if adding*/);
 
-        IndexDisplay.Display(index_path, System.out);
+        //IndexDisplay.Display(index_path, System.out);
     }
 
     /**

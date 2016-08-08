@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 
 public class IndexDisplay {
 
-    public static void Display(String index_path, PrintStream ps)
+    public static void  Display(String index_path, PrintStream ps)
             throws Exception {
         Directory d = new SimpleFSDirectory(Paths.get(index_path));
         DirectoryReader r = DirectoryReader.open(d);
