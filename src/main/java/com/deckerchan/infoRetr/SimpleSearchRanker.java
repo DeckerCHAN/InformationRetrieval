@@ -42,7 +42,7 @@ public class SimpleSearchRanker {
 
     public static void main(String[] args) throws Exception {
 
-        String index_path = args[0];
+        String index_path = Configuration.INDEX_PATH;
         String default_field = "CONTENT";
 
         FileIndexBuilder builder = new FileIndexBuilder(index_path);
@@ -57,7 +57,7 @@ public class SimpleSearchRanker {
 
         PrintStream fileOut = new PrintStream(new FileOutputStream(Configuration.OUT_FILE_PATH, false));
 
-        try (BufferedReader br = new BufferedReader(new FileReader(index_path))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String content = null;
