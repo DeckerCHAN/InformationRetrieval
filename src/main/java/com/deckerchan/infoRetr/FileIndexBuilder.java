@@ -4,7 +4,7 @@
  * @author Scott Sanner, Paul Thomas
  */
 
-package com.deckerchan;
+package com.deckerchan.infoRetr;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;

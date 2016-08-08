@@ -1,4 +1,4 @@
-package com.deckerchan;
+package com.deckerchan.infoRetr;
 
 import java.text.DecimalFormat;
 

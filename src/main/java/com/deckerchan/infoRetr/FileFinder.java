@@ -5,7 +5,7 @@
  * @author Scott Sanner
  */
 
-package com.deckerchan;
+package com.deckerchan.infoRetr;
 
 import java.io.File;
 import java.util.ArrayList;

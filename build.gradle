@@ -10,7 +10,7 @@ repositories {
     mavenCentral()
 }
 
-mainClassName = 'com.deckerchan.SimpleSearchRanker'
+mainClassName = 'com.deckerchan.infoRetr.SimpleSearchRanker'
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
