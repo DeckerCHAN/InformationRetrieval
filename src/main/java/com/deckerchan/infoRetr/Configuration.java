@@ -8,4 +8,5 @@ public class Configuration {
     public final static String TOPIC_PATH = "./topics/air.topics";
     public final static Integer SEARCH_NUMBER_HIT = 5;
     public final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.####");
+    public final static String OUT_FILE_PATH = "out.txt";
 }

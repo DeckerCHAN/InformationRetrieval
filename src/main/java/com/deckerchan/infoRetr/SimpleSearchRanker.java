@@ -55,7 +55,7 @@ public class SimpleSearchRanker {
         //           where one can individually boost the importance of query terms with
         //           a multipler using ^
 
-        PrintStream fileOut = new PrintStream(new FileOutputStream("out.txt", false));
+        PrintStream fileOut = new PrintStream(new FileOutputStream(Configuration.OUT_FILE_PATH, false));
 
         try (BufferedReader br = new BufferedReader(new FileReader(Configuration.TOPIC_PATH))) {
             String line;
@@ -81,36 +81,7 @@ public class SimpleSearchRanker {
             }
         }
 
-//        // Standard single term
-//        ranker.doSearch("Obama", 5, fileOut);
-//
-//        // Multiple term (implicit OR)
-//        ranker.doSearch("Obama Hillary", 5, fileOut);
-//
-//        // Wild card
-//        ranker.doSearch("Ob*ma", 5, fileOut);
-//
-//        // Edit distance
-//        ranker.doSearch("Obama~.4", 5, fileOut);
-//
-//        // Fielded search (FIELD:...), boolean (AND OR NOT)
-//        ranker.doSearch("FIRST_LINE:Obama AND Hillary", 5, System.out);
-//        ranker.doSearch("FIRST_LINE:Obama AND NOT Hillary", 5, System.out);
-//
-//        // Phrase search (slop factor ~k allows words to be within k distance)
-//        ranker.doSearch("\"Barack Obama\"", 5, System.out);
-//        ranker.doSearch("\"Barack Obama\"~5", 5, System.out);
-//
-//        // Note: can boost terms or subqueries using ^ (e.g., ^10 or ^.1) -- default is 1
-//        ranker.doSearch("Obama^10 Hillary^0.1", 5, System.out);
-//        ranker.doSearch("(FIRST_LINE:\"Barack Obama\")^10 OR Hillary^0.1", 5, System.out);
-//
-//        // Reversing boost... see change in ranking
-//        ranker.doSearch("Obama^0.1 Hillary^10", 5, System.out);
-//        ranker.doSearch("(FIRST_LINE:\"Barack Obama\")^0.1 OR Hillary^10", 5, System.out);
-//
-//        // Complex query
-//        ranker.doSearch("(FIRST_LINE:\"Barack Obama\"~5^10 AND Obama~.4) OR Hillary", 5, System.out);
+        System.out.printf("File wrote to %s.%n", Configuration.OUT_FILE_PATH);
     }
 
     public void doSearch(String index, String queryContent, PrintStream ps)
