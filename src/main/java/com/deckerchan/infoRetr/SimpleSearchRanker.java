@@ -6,6 +6,7 @@
 
 package com.deckerchan.infoRetr;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -19,9 +20,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.System.out;
 
 public class SimpleSearchRanker {
 
@@ -42,8 +46,17 @@ public class SimpleSearchRanker {
 
     public static void main(String[] args) throws Exception {
 
+        if (args.length != 1) {
+            out.println("Need topic file!");
+            System.exit(0);
+        }
         String index_path = Configuration.INDEX_PATH;
         String default_field = "CONTENT";
+        Path topicFile = Paths.get(args[0]);
+        if (!topicFile.toFile().exists()) {
+            out.print("Topic file not exists!");
+            System.exit(0);
+        }
 
         FileIndexBuilder builder = new FileIndexBuilder(index_path);
         SimpleSearchRanker ranker = new SimpleSearchRanker(builder._indexPath, default_field, builder._analyzer);
@@ -57,13 +70,17 @@ public class SimpleSearchRanker {
 
         PrintStream fileOut = new PrintStream(new FileOutputStream(Configuration.OUT_FILE_PATH, false));
 
-        try (BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(topicFile.toFile()))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String content = null;
                 Matcher contentMatcher = Pattern.compile("(?<=\\d\\s).*").matcher(line);
                 if (contentMatcher.find()) {
                     content = contentMatcher.group(0);
+                    //normalize content
+                    content = StringEscapeUtils.unescapeJava(content);
+
+
                 } else {
                     System.exit(0);
                 }
@@ -76,12 +93,13 @@ public class SimpleSearchRanker {
                     System.exit(0);
                 }
 
+
                 ranker.doSearch(index, content, fileOut);
 
             }
         }
 
-        System.out.printf("File wrote to %s.%n", Configuration.OUT_FILE_PATH);
+        out.printf("File wrote to %s.%n", Configuration.OUT_FILE_PATH);
     }
 
     public void doSearch(String index, String queryContent, PrintStream ps)
