@@ -77,8 +77,6 @@ public class SimpleSearchRanker {
                 Matcher contentMatcher = Pattern.compile("(?<=\\d\\s).*").matcher(line);
                 if (contentMatcher.find()) {
                     content = contentMatcher.group(0);
-                    //normalize content
-                    content = StringEscapeUtils.unescapeJava(content);
 
 
                 } else {
