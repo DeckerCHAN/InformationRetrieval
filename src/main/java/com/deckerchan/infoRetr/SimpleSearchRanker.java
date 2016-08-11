@@ -92,7 +92,7 @@ public class SimpleSearchRanker {
                 }
 
 
-                ranker.doSearch(index, content, fileOut);
+                ranker.doSearch(index, content.toLowerCase(), fileOut);
 
             }
         }
