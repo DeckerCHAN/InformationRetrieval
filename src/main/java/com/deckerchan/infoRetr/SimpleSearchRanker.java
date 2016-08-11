@@ -113,7 +113,7 @@ public class SimpleSearchRanker {
             int docId = hits[i].doc;
             Document document = _searcher.doc(docId);
 
-            ps.printf("%s Q0 %s %d %s myname %n", index, Paths.get(document.get("PATH")).getFileName().toString(), i, Configuration.DECIMAL_FORMAT.format(hits[i].score));
+            ps.printf("%s Q0 %s %d %s myname %n", index, document.get("NAME"), i, Configuration.DECIMAL_FORMAT.format(hits[i].score));
 //            ps.println((i + 1) + ". (" + _df.format(hits[i].score)
 //                    + ") " + document.get("PATH"));
         }

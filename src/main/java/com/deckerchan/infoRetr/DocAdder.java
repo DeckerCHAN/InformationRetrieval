@@ -35,6 +35,7 @@ public class DocAdder {
                 content.append(line + "\n");
             }
             doc.add(new StoredField("PATH", f.getPath()));
+            doc.add(new StoredField("NAME",f.getName()));
             doc.add(new TextField("FIRST_LINE", first_line, Field.Store.YES));
             doc.add(new TextField("CONTENT", content.toString(), Field.Store.YES));
 

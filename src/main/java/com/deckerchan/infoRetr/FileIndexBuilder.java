@@ -7,7 +7,6 @@
 package com.deckerchan.infoRetr;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -30,7 +29,7 @@ public class FileIndexBuilder {
         // See the lucene "analysers-common" library for some more options;
         // the .jar file is included in the lib/ directory, and there is
         // good documentation online
-        _analyzer = new SimpleAnalyzer();
+        _analyzer = new DerekAnalyzer();
 
         // Store the index path
         _indexPath = index_path;
