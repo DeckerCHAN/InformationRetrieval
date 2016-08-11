@@ -38,8 +38,8 @@ public class SimpleSearchRanker {
     public SimpleSearchRanker(String index_path, String default_field, Analyzer a)
             throws IOException {
         _indexPath = index_path;
-        Directory d = new SimpleFSDirectory(Paths.get(_indexPath));
-        DirectoryReader dr = DirectoryReader.open(d);
+        Directory directory = new SimpleFSDirectory(Paths.get(_indexPath));
+        DirectoryReader dr = DirectoryReader.open(directory);
         _searcher = new IndexSearcher(dr);
         _parser = new StandardQueryParser(a);
     }
